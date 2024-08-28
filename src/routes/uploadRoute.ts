@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import { extractValueFromLLM } from '../services/llmService';
-import { isBase64, checkDuplicateReading } from '../services/validationService';
+import { isBase64, checkDuplicateReading, convertToImage } from '../services/validationService';
 import { UploadRequest } from '../types/uploadRequest';
 import { getDb } from '../db';
 import logger from '../services/logger';
@@ -12,6 +12,7 @@ router.post('/upload', async (req: Request, res: Response) => {
     const { image, customer_code, measure_datetime, measure_type } = req.body as UploadRequest;
 
     logger.info('Requisição recebida para /upload', {
+        image,
         customer_code,
         measure_datetime,
         measure_type
@@ -70,7 +71,8 @@ router.post('/upload', async (req: Request, res: Response) => {
         }
 
         const measureUUID = uuidv4();
-        const imageUrl = `https://localhost:3000/image-temp`;
+        convertToImage(image, measureUUID);
+        const imageUrl = `localhost:3000/image-temp/` + measureUUID;
 
         const db = getDb();
         const readingsCollection = db.collection('readings');
