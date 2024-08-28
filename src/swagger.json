@@ -1,207 +1,128 @@
 {
-    "openapi": "3.0.0",
-    "info": {
-      "title": "Measurement API",
-      "version": "1.0.0",
-      "description": "API para upload, confirmação e listagem de medições."
-    },
-    "paths": {
-      "/upload": {
-        "post": {
-          "summary": "Upload de Medições",
-          "description": "Realiza o upload de uma nova medição.",
-          "requestBody": {
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "image": {
-                      "type": "string",
-                      "format": "base64",
-                      "description": "Imagem em formato Base64"
-                    },
-                    "customer_code": {
-                      "type": "string",
-                      "description": "Código do cliente"
-                    },
-                    "measure_datetime": {
-                      "type": "string",
-                      "format": "date-time",
-                      "description": "Data e hora da medição"
-                    },
-                    "measure_type": {
-                      "type": "string",
-                      "enum": ["WATER", "GAS"],
-                      "description": "Tipo de medição"
-                    }
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Measurement API",
+    "version": "1.0.0",
+    "description": "API para upload, confirmação e listagem de medições."
+  },
+  "paths": {
+    "/upload": {
+      "post": {
+        "summary": "Upload de Medições",
+        "description": "Realiza o upload de uma nova medição.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "image": {
+                    "type": "string",
+                    "format": "base64",
+                    "description": "Imagem em formato Base64"
                   },
-                  "required": ["image", "customer_code", "measure_datetime", "measure_type"]
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "Upload realizado com sucesso",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "image_url": {
-                        "type": "string",
-                        "description": "URL da imagem"
-                      },
-                      "measure_value": {
-                        "type": "number",
-                        "description": "Valor da medição"
-                      },
-                      "measure_uuid": {
-                        "type": "string",
-                        "description": "UUID da medição"
-                      }
-                    }
+                  "customer_code": {
+                    "type": "string",
+                    "description": "Código do cliente"
+                  },
+                  "measure_datetime": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Data e hora da medição"
+                  },
+                  "measure_type": {
+                    "type": "string",
+                    "enum": [
+                      "WATER",
+                      "GAS"
+                    ],
+                    "description": "Tipo de medição"
                   }
-                }
-              }
-            },
-            "400": {
-              "description": "Dados inválidos fornecidos",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "error_code": { "type": "string" },
-                      "error_description": { "type": "string" }
-                    }
-                  }
-                }
-              }
-            },
-            "409": {
-              "description": "Leitura duplicada",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "error_code": { "type": "string" },
-                      "error_description": { "type": "string" }
-                    }
-                  }
-                }
-              }
-            },
-            "500": {
-              "description": "Erro no servidor",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "error_code": { "type": "string" },
-                      "error_description": { "type": "string" }
-                    }
-                  }
-                }
+                },
+                "required": [
+                  "image",
+                  "customer_code",
+                  "measure_datetime",
+                  "measure_type"
+                ]
               }
             }
           }
-        }
-      },
-      "/confirm": {
-        "patch": {
-          "summary": "Confirmação de Medição",
-          "description": "Confirma ou corrige o valor lido pelo LLM.",
-          "requestBody": {
-            "required": true,
+        },
+        "responses": {
+          "200": {
+            "description": "Upload realizado com sucesso",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
+                    "image_url": {
+                      "type": "string",
+                      "description": "URL da imagem"
+                    },
+                    "measure_value": {
+                      "type": "number",
+                      "description": "Valor da medição"
+                    },
                     "measure_uuid": {
                       "type": "string",
                       "description": "UUID da medição"
-                    },
-                    "confirmed_value": {
-                      "type": "integer",
-                      "description": "Valor confirmado da medição"
                     }
-                  },
-                  "required": ["measure_uuid", "confirmed_value"]
+                  }
                 }
               }
             }
           },
-          "responses": {
-            "200": {
-              "description": "Confirmação realizada com sucesso",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "success": { "type": "boolean" }
+          "400": {
+            "description": "Dados inválidos fornecidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error_code": {
+                      "type": "string"
+                    },
+                    "error_description": {
+                      "type": "string"
                     }
                   }
                 }
               }
-            },
-            "400": {
-              "description": "Dados inválidos fornecidos",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "error_code": { "type": "string" },
-                      "error_description": { "type": "string" }
+            }
+          },
+          "409": {
+            "description": "Leitura duplicada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error_code": {
+                      "type": "string"
+                    },
+                    "error_description": {
+                      "type": "string"
                     }
                   }
                 }
               }
-            },
-            "404": {
-              "description": "Medição não encontrada",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "error_code": { "type": "string" },
-                      "error_description": { "type": "string" }
-                    }
-                  }
-                }
-              }
-            },
-            "409": {
-              "description": "Medição já confirmada",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "error_code": { "type": "string" },
-                      "error_description": { "type": "string" }
-                    }
-                  }
-                }
-              }
-            },
-            "500": {
-              "description": "Erro no servidor",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "error_code": { "type": "string" },
-                      "error_description": { "type": "string" }
+            }
+          },
+          "500": {
+            "description": "Erro no servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error_code": {
+                      "type": "string"
+                    },
+                    "error_description": {
+                      "type": "string"
                     }
                   }
                 }
@@ -209,50 +130,185 @@
             }
           }
         }
-      },
-      "/{customer_code}/list": {
-        "get": {
-          "summary": "Listagem de Medições",
-          "description": "Lista as medições realizadas por um determinado cliente.",
-          "parameters": [
-            {
-              "name": "customer_code",
-              "in": "path",
-              "required": true,
+      }
+    },
+    "/confirm": {
+      "patch": {
+        "summary": "Confirmação de Medição",
+        "description": "Confirma ou corrige o valor lido pelo LLM.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
               "schema": {
-                "type": "string"
-              },
-              "description": "Código do cliente"
-            },
-            {
-              "name": "measure_type",
-              "in": "query",
-              "schema": {
-                "type": "string",
-                "enum": ["WATER", "GAS"]
-              },
-              "description": "Tipo de medição (WATER ou GAS)"
+                "type": "object",
+                "properties": {
+                  "measure_uuid": {
+                    "type": "string",
+                    "description": "UUID da medição"
+                  },
+                  "confirmed_value": {
+                    "type": "integer",
+                    "description": "Valor confirmado da medição"
+                  }
+                },
+                "required": [
+                  "measure_uuid",
+                  "confirmed_value"
+                ]
+              }
             }
-          ],
-          "responses": {
-            "200": {
-              "description": "Operação realizada com sucesso",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "customer_code": { "type": "string" },
-                      "measures": {
-                        "type": "array",
-                        "items": {
-                          "type": "object",
-                          "properties": {
-                            "measure_uuid": { "type": "string" },
-                            "measure_datetime": { "type": "string", "format": "date-time" },
-                            "measure_type": { "type": "string" },
-                            "has_confirmed": { "type": "boolean" },
-                            "image_url": { "type": "string" }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Confirmação realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos fornecidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error_code": {
+                      "type": "string"
+                    },
+                    "error_description": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Medição não encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error_code": {
+                      "type": "string"
+                    },
+                    "error_description": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Medição já confirmada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error_code": {
+                      "type": "string"
+                    },
+                    "error_description": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro no servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error_code": {
+                      "type": "string"
+                    },
+                    "error_description": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{customer_code}/list": {
+      "get": {
+        "summary": "Listagem de Medições",
+        "description": "Lista as medições realizadas por um determinado cliente.",
+        "parameters": [
+          {
+            "name": "customer_code",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Código do cliente"
+          },
+          {
+            "name": "measure_type",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "WATER",
+                "GAS"
+              ]
+            },
+            "description": "Tipo de medição (WATER ou GAS)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "customer_code": {
+                      "type": "string"
+                    },
+                    "measures": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "measure_uuid": {
+                            "type": "string"
+                          },
+                          "measure_datetime": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "measure_type": {
+                            "type": "string"
+                          },
+                          "has_confirmed": {
+                            "type": "boolean"
+                          },
+                          "image_url": {
+                            "type": "string"
                           }
                         }
                       }
@@ -260,44 +316,104 @@
                   }
                 }
               }
-            },
-            "400": {
-              "description": "Parâmetro measure_type inválido",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "error_code": { "type": "string" },
-                      "error_description": { "type": "string" }
+            }
+          },
+          "400": {
+            "description": "Parâmetro measure_type inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error_code": {
+                      "type": "string"
+                    },
+                    "error_description": {
+                      "type": "string"
                     }
                   }
                 }
               }
-            },
-            "404": {
-              "description": "Nenhuma medição encontrada",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "error_code": { "type": "string" },
-                      "error_description": { "type": "string" }
+            }
+          },
+          "404": {
+            "description": "Nenhuma medição encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error_code": {
+                      "type": "string"
+                    },
+                    "error_description": {
+                      "type": "string"
                     }
                   }
                 }
               }
+            }
+          },
+          "500": {
+            "description": "Erro no servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error_code": {
+                      "type": "string"
+                    },
+                    "error_description": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/image-temp/{image_uuid}": {
+      "get": {
+        "summary": "Obter Imagem Temporária",
+        "description": "Retorna uma imagem temporária com base no UUID;.",
+        "parameters": [
+          {
+            "name": "image_uuid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
             },
-            "500": {
-              "description": "Erro no servidor",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "error_code": { "type": "string" },
-                      "error_description": { "type": "string" }
+            "description": "UUID da imagem"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Imagem retornada com sucesso",
+            "content": {
+              "image/png": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Imagem não encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error_code": {
+                      "type": "string"
+                    },
+                    "error_description": {
+                      "type": "string"
                     }
                   }
                 }
@@ -311,4 +427,4 @@
       "schemas": {}
     }
   }
-  
+}
