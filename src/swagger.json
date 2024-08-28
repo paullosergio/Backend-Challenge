@@ -378,7 +378,7 @@
     "/image-temp/{image_uuid}": {
       "get": {
         "summary": "Obter Imagem Temporária",
-        "description": "Retorna uma imagem temporária com base no UUID;.",
+        "description": "Retorna uma imagem temporária (5min) com base no UUID.",
         "parameters": [
           {
             "name": "image_uuid",
