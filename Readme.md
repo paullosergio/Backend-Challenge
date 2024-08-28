@@ -43,6 +43,12 @@ Este projeto é um backend desenvolvido em Node.js e TypeScript que lida com o u
     docker-compose up --build
     ```
 
+    ou 
+
+     ```bash
+    make run
+    ```
+
 5. Acesse a aplicação no navegador em http://localhost:3000/docs.
 
 ## Scripts Disponíveis
