@@ -1,6 +1,6 @@
 import { getDb } from '../db';
 import logger from '../services/logger';
-import { IConfirmeRepository, Reading } from './IConfirmRepository';
+import { IConfirmeRepository } from './IConfirmRepository';
 
 export class ConfirmRepository implements IConfirmeRepository{    
     constructor() {
