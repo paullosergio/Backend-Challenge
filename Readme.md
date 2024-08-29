@@ -22,13 +22,13 @@ Este projeto é um backend desenvolvido em Node.js e TypeScript que lida com o u
 1. Clone o repositório:
 
    ```bash
-   git clone git@github.com:paullosergio/Backend-Challenge.git
+   git clone https://github.com/paullosergio/Backend-Challenge.git
    ```
 
 2. Navegue até o diretório do projeto:
 
     ```bash
-    cd backend
+    cd Backend-Challenge
     ```
 
 3. Instale as dependências do projeto:
