@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
 import { ReadingService } from '../services/readingService';
 import logger from '../services/logger';
+import { IListController } from './IListController';
 
-export class ListController {
+export class ListController implements IListController {
     private readingService: ReadingService;
 
     constructor() {

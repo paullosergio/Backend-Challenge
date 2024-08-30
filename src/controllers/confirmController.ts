@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
 import { ConfirmService } from '../services/confirmService';
+import { IConfirmController } from './IConfirmController';
 
-export class ConfirmController {
+export class ConfirmController implements IConfirmController {
     private confirmService: ConfirmService;
 
     constructor() {

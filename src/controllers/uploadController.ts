@@ -5,8 +5,9 @@ import { ReadingService } from '../services/readingService';
 import { LLMService } from '../services/llmService';
 import logger from '../services/logger';
 import { ImageService } from '../services/imageService';
+import { IUploadController } from './IUploadControler';
 
-export class UploadController {
+export class UploadController implements IUploadController {
     private validationService: ValidationService;
     private readingService: ReadingService;
     private llmService: LLMService;
@@ -23,7 +24,14 @@ export class UploadController {
         try {
             const { image, customer_code, measure_datetime, measure_type } = req.body;
 
-            this.validationService.validateUploadData(image, customer_code, measure_datetime, measure_type);
+            const message = this.validationService.validateUploadData(image, customer_code, measure_datetime, measure_type);
+
+            if (message) {
+                return res.status(400).json({
+                    error_code: 'INVALID_DATA',
+                    error_description: message
+                });
+            }
 
             const hasDuplicate = await this.readingService.checkDuplicateReading(measure_type, new Date(measure_datetime));
             if (hasDuplicate) {

@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
 import { ImageService } from '../services/imageService';
 import logger from '../services/logger';
+import { IImageController } from './IimageController';
 
-export class ImageController {
+export class ImageController implements IImageController {
     private imageService: ImageService;
 
     constructor() {
