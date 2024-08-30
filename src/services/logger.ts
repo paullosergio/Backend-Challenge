@@ -6,6 +6,7 @@ const logger = createLogger({
         format.timestamp(),
         format.errors({ stack: true }),
         format.splat(),
+        format.metadata(),
         format.json()
     ),
     transports: [
@@ -18,7 +19,16 @@ if (process.env.NODE_ENV !== 'production') {
     logger.add(new transports.Console({
         format: format.combine(
             format.colorize(),
-            format.simple()
+            format.timestamp({ format: 'HH:mm:ss' }),
+            format.printf(({ level, message, timestamp, ...meta }) => {
+                // Remove o timestamp dos metadados
+                const { timestamp: _, ...filteredMeta } = meta.metadata || {};
+                const metaString = Object.keys(filteredMeta).length
+                ? `{${Object.keys(filteredMeta).map(key => `${key}: ${filteredMeta[key]}`).join(', ')}}`
+                : '';
+            return `[${level}] ${timestamp}: ${message} ${metaString}`;
+        })
+
         )
     }));
 }
