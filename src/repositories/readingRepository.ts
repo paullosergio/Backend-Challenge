@@ -1,9 +1,18 @@
+import { Db, Document } from 'mongodb';
 import { getDb } from '../db';
 import logger from '../services/logger';
 
 export class ReadingRepository {
+    private db: Db | undefined;
+    private readingsCollection: any;
 
     constructor() {
+        this.initialize()
+    }
+
+    public async initialize(): Promise<void> {
+        this.db = await getDb();
+        this.readingsCollection = this.db.collection('readings');
     }
 
     public async saveReading(readingData: {
@@ -15,12 +24,9 @@ export class ReadingRepository {
         measure_uuid: string;
     }): Promise<void> {
         try {
-            const db =  getDb();
-            const readingsCollection = db.collection('readings');
-
             logger.info('Salvando leitura no banco de dados', { readingData });
 
-            await readingsCollection.insertOne({
+            await this.readingsCollection.insertOne({
                 ...readingData,
                 has_confirmed: false,
             });
@@ -32,9 +38,7 @@ export class ReadingRepository {
         }
     }
 
-    public async getReadings(customerCode: string, measureType?: string): Promise<any[]> {
-        const db =  getDb();
-        const readingsCollection = db.collection('readings');
+    public async getReadings(customerCode: string, measureType?: string): Promise<Document[] | []> {
         const query: any = { customer_code: customerCode };
 
         if (measureType) {
@@ -42,15 +46,13 @@ export class ReadingRepository {
         }
 
         logger.info('Consultando o banco de dados com os critérios', { query });
-        return await readingsCollection.find(query).toArray();
+        return await this.readingsCollection.find(query).toArray();
     }
 
-    public async findReadingByTypeAndDate(measureType: string, startDate: Date, endDate: Date): Promise<any | null> {
-        const db =  getDb();
-        const readingsCollection = db.collection('readings');
+    public async findReadingByTypeAndDate(measureType: string, startDate: Date, endDate: Date): Promise<Document | null> {
 
         try {
-            return await readingsCollection.findOne({
+            return await this.readingsCollection.findOne({
                 measure_type: measureType,
                 measure_datetime: {
                     $gte: startDate,
