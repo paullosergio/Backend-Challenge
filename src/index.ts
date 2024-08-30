@@ -1,5 +1,6 @@
 import express from 'express';
 import swaggerUi from 'swagger-ui-express'
+import logger from './services/logger';
 import uploadRoute from './routes/uploadRoute';
 import confirmRoute from './routes/confirmRoute';
 import imageRoute from './routes/imageRoute';
@@ -22,8 +23,8 @@ connectToDatabase(mongoUri).then(() => {
 
     const PORT = process.env.PORT || 3000;
     app.listen(PORT, () => {
-        console.log(`Servidor rodando na porta ${PORT}`);
+        logger.info(`Servidor iniciado na porta ${PORT}`);
     });
 }).catch((error) => {
-    console.error('Erro ao conectar ao MongoDB:', error);
+    logger.error('Erro ao conectar ao MongoDB:', error);
 });
